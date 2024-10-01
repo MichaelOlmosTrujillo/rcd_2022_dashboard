@@ -1,8 +1,8 @@
-# :earth_americas: GDP dashboard template
+# :Residuos de Construcción y Demolición (RCD) en Colombia. Año 2022
 
 A simple Streamlit app showing the GDP of different countries in the world.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://rcd2022colombiadashboard.streamlit.app/)
 
 ### How to run it on your own machine
 
@@ -15,5 +15,5 @@ A simple Streamlit app showing the GDP of different countries in the world.
 2. Run the app
 
    ```
-   $ streamlit run rcd_2022_dashboard.py
+   $ streamlit run streamlit_app.py
    ```
