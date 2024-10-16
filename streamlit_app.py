@@ -39,6 +39,13 @@ with col_titulo_1:
     st.image(ruta_logo)
 with col_titulo_2:
     st.markdown(titulo, unsafe_allow_html=True)
+warning = 'Los datos presentados hasta el momento corresponden a una primera versión '
+warning += 'de la información revisada hasta el 20 de junio del 2024. '
+warning += 'Si hay alguna incongruencia puede deberse a la calidad de los datos o '
+warning += 'a que la información no está actualizada. '
+warning += 'Se generarán distintas versiones de la información con el fin de mitigar '
+warning += 'dichas incogruencias o con el fin de proporcionar información más clara.'
+st.warning(warning, icon="⚠️")
 ## Menú
 menu = option_menu(None, ["RCD 2022", "Mapa de gestores"],
                    icons = ['house', 'geo-alt-fill'],
@@ -100,26 +107,47 @@ if menu == "RCD 2022":
     st.plotly_chart(fig)
 
     ### Gráfico de los indicadores
+    # meta de aprovechamiento
     media_meta_aprov = df['meta_de_aprovechamiento'].mean()
     # rcd_generado = millify(df['RCD Generado'].sum())
     rcd_generado = round(df['RCD Generado'].sum(), 1)
-    # rcd_dispo_final = millify(df['RCD enviado a Disposición Final'].sum())
-    rcd_dispo_final = round(df['RCD enviado a Disposición Final'].sum(), 1)
+    # rcd aprovechado en obra
+    rcd_aprovechado_en_obra = round(df['RCD Aprovechado en Obra'].sum(), 1)
+    # rcd a receptor
+    rcd_receptor = round(df['RCD enviado a Receptor'].sum(), 1)
+    # rcd a punto limpio
+    rcd_punto_limpio = round(df['RCD enviado a Punto Limpio'].sum(), 1)
+    # rcd a planta de aprovechamiento
+    rcd_planta_aprov = round(df['RCD enviado a Planta de Aprovechamiento'].sum(), 1)
     label_meta_aprov = "Promedio de las metas de aprovechamiento: "
+    rcd_dispo_final = round(df['RCD enviado a Disposición Final'].sum(), 1)
 
     # Create an indicator for each row in the DataFrame
     col_1, col_2, col_3 = st.columns(3)
+    # col_1_1, col_2_1, col_3_1 = st.columns(3)
     if df.shape[0] == cantidad_autoridades_ambientales:
+
         with col_1:
             label_meta_aprov = "Promedio de las metas de aprovechamiento"
             st.metric(label = label_meta_aprov,
                     value = f"{media_meta_aprov * 100:.1f}%",
                     delta='Excluyendo material de excavación',
                     delta_color='inverse')
+            label_planta_aprov = 'Total de RCD enviado a Planta de Aprovechamiento'
+            st.metric(label = label_planta_aprov,
+                    value = f"{rcd_planta_aprov:,.0f}")
+            label_aprov_en_obra = 'Total de RCD Aprovechado en Obra'
+            st.metric(label = label_aprov_en_obra,
+                      value = f"{rcd_aprovechado_en_obra:,.0f}")
+
         with col_2:
             label_gen = 'Total de RCD generado'
             st.metric(label = label_gen,
                     value = f"{rcd_generado:,.0f}",
+                    delta='Toneladas')
+            label_receptor = 'Total de RCD enviado a Receptor'
+            st.metric(label = label_receptor,
+                    value = f"{rcd_receptor:,.0f}",
                     delta='Toneladas')
         with col_3:
             label_dispo_final = 'Total de RCD enviado a Disposición Final'
@@ -127,14 +155,24 @@ if menu == "RCD 2022":
                     value = f'{rcd_dispo_final:,.0f}',
                     delta='Toneladas',
                     delta_color='normal')
+            label_punto_limpio = 'Total de RCD enviado a Punto Limpio'
+            st.metric(label = label_punto_limpio,
+                    value = f"{rcd_punto_limpio:,.0f}",
+                    delta='Toneladas')
     else:
         for i, row in df.iterrows():
             with col_1:
                 label_meta_aprov = "Meta de aprovechamiento: "
+                label_aprov_en_obra = "RCD Aprovechado en Obra: "
                 st.metric(label= label_meta_aprov + f"{row['Autoridad Ambiental']}",
                         value=f"{row['meta_de_aprovechamiento'] * 100:.1f}%",
                         delta='Excluyendo material de excavación',
                         delta_color='inverse')
+                rcd_aprov_en_obra = round(row['RCD Aprovechado en Obra'], 1)
+                st.metric(label = label_aprov_en_obra + f"{row['Autoridad Ambiental']}",
+                          value = f"{rcd_aprov_en_obra:,.0f}",
+                          delta = 'Toneladas')
+                
             with col_2:
                 label_gen = "RCD generado: "
                 # rcd_gen = millify(row['RCD Generado'])
