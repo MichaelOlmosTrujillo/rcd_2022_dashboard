@@ -163,11 +163,15 @@ if menu == "RCD 2022":
         for i, row in df.iterrows():
             with col_1:
                 label_meta_aprov = "Meta de aprovechamiento: "
-                label_aprov_en_obra = "RCD Aprovechado en Obra: "
                 st.metric(label= label_meta_aprov + f"{row['Autoridad Ambiental']}",
                         value=f"{row['meta_de_aprovechamiento'] * 100:.1f}%",
                         delta='Excluyendo material de excavación',
                         delta_color='inverse')
+                label_planta_aprov = "RCD enviado a Planta de Aprovechamiento: "
+                rcd_planta_aprov = round(row['RCD enviado a Planta de Aprovechamiento'], 1)
+                st.metric(label = label_planta_aprov + f"{row['Autoridad Ambiental']}",
+                          value = f"{rcd_planta_aprov:,.0f}")
+                label_aprov_en_obra = "RCD Aprovechado en Obra: "
                 rcd_aprov_en_obra = round(row['RCD Aprovechado en Obra'], 1)
                 st.metric(label = label_aprov_en_obra + f"{row['Autoridad Ambiental']}",
                           value = f"{rcd_aprov_en_obra:,.0f}",
@@ -180,15 +184,51 @@ if menu == "RCD 2022":
                 st.metric(label= label_gen + f"{row['Autoridad Ambiental']}",
                         value=f"{rcd_gen:,.0f}",
                         delta='Toneladas')
+                label_receptor = "RCD a receptor: "
+                rcd_receptor = round(row['RCD enviado a Receptor'], 1)
+                st.metric(label=label_receptor + f"{row['Autoridad Ambiental']}",
+                        value=f"{rcd_receptor:,.0f}",
+                        delta='Toneladas')
             with col_3:
                 label_dispo_final = "RCD enviado a Disposición Final: "
                 # rcd_dispo_final = millify(row['RCD enviado a Disposición Final'])
-                rcd_dispo_final = round(row['RCD enviado a Disposición Final'], 0)
+                rcd_dispo_final = round(row['RCD enviado a Disposición Final'], 1)
                 st.metric(label=label_dispo_final + f"{row['Autoridad Ambiental']}",
                         value=f'{rcd_dispo_final:,.0f}',
                         delta='Toneladas',
                         delta_color='normal')
+                label_punto_limpio = "RCD a punto limpio: "
+                rcd_punto_limpio = round(row['RCD enviado a Punto Limpio'], 1)
+                st.metric(label=label_punto_limpio + f"{row['Autoridad Ambiental']}",
+                        value=f"{rcd_punto_limpio:,.0f}",
+                        delta='Toneladas')
 elif menu == "Mapa de gestores":
+
+    # st.dataframe(df_gestores)
+    with st.sidebar:
+        st.title('Mapa de gestores')
+        autoridad_ambiental_lista = list(df_gestores['aa'].unique())
+        # st.dataframe(autoridad_ambiental_lista)
+        selected_autoridades = st.multiselect('Selecciona una Autoridad Ambiental',
+                    autoridad_ambiental_lista,
+                    )
+        departamentos_lista = list(df_gestores['depto'].unique())
+        selected_departamentos = st.multiselect('Selecciona un Departamento',
+                                                    departamentos_lista,
+                                                    )
+        gestores_lista = list(df_gestores['nomb'].unique())
+        selected_gestores = st.multiselect('Selecciona un Gestor',
+                                                            gestores_lista,
+                                                            )
+    if len(selected_autoridades) > 0:
+        df_gestores = df_gestores[
+            df_gestores['aa'].isin(selected_autoridades)]
+    if len(selected_departamentos) > 0:
+        df_gestores = df_gestores[
+            df_gestores['depto'].isin(selected_departamentos)]
+    if len(selected_gestores) > 0:
+        df_gestores = df_gestores[
+            df_gestores['nomb'].isin(selected_gestores)]
 
 # with st.sidebar:
 #     selected = option_menu("RCD", ["RCD 2022", "mapa de gestores"],
