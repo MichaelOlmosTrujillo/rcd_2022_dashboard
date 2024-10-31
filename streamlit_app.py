@@ -11,7 +11,8 @@ st.set_page_config(
     page_title="RCD 2022",
     page_icon="🏂",
     layout="wide",
-    initial_sidebar_state="expanded")
+    initial_sidebar_state="expanded"
+    )
 
 def load_data():
     time.sleep(5)
@@ -27,7 +28,7 @@ def main():
     for i in range(2):
         img = ruta_images[i % len(ruta_images)]
         placeholder.image(img, use_column_width=True)
-        time.sleep(0.5)
+        time.sleep(0.7)
     
 
     alt.themes.enable("dark")
@@ -66,12 +67,15 @@ def main():
     warning += 'dichas incogruencias o con el fin de proporcionar información más clara.'
     st.warning(warning, icon="⚠️")
     ## Menú
-    menu = option_menu(None, ["RCD 2022", "Mapa de gestores"],
-                    icons = ['house', 'geo-alt-fill'],
+    menu = option_menu(None, ["RCD 2022", 
+                              "Mapa de gestores", 
+                              "formulario RCD y su diligenciamiento"
+                              ],
+                    icons = ['house', 'geo-alt-fill', 'file-earmark-text'],
                     menu_icon = 'cast',
                     default_index=0,
                     orientation='horizontal')
-    menu
+    # menu
     # Crear sidebar para seleccionar una autoridad ambiental
     df.rename(columns = {
         'autoridad_ambiental': 'Autoridad Ambiental',
@@ -248,7 +252,8 @@ def main():
         if len(selected_gestores) > 0:
             df_gestores = df_gestores[
                 df_gestores['nomb'].isin(selected_gestores)]
-
+    
+   
     # with st.sidebar:
     #     selected = option_menu("RCD", ["RCD 2022", "mapa de gestores"],
     #                            icons = ['house', 'globe-americas'], menu_icon = 'cast',
@@ -289,6 +294,35 @@ def main():
 
         evento = st.pydeck_chart(grafico, on_select="rerun", selection_mode='multi-object')
         evento.selection
+    elif menu == 'formulario RCD y su diligenciamiento':
+        st.title('Formulario RCD y su Manual de diligenciamiento')
+        introduccion = "Aquí encontrará el formulario con el cuál podrán reportar "
+        introduccion += "los datos de RCD para los años 2022 y 2023. "
+        introduccion += "El formulario fue desarrollado en Survey123 que es parte de ArcGis. "
+        introduccion += "También encontrará el Manual de diligenciamiento del formulario. "
+        introduccion += "Los datos que tengan un * en color rojo son obligatorios y el formulario no "
+        introduccion += "se enviará si no se completan dichos datos."
+        st.write(introduccion)
+        url_formulario = 'https://survey123.arcgis.com/share/a1a828c6bbad472c94b11da7e8eb94c1'
+        # st.markdown("Link del formulario: [formulario](%s)" % url_formulario)
+        st.title('Manual de diligenciamiento del formulario')
+        st.markdown('1. Dar clic en el link del formulario: [formulario](%s)' % url_formulario)
+        st.markdown('2. ingrese los datos de la persona que realiza el reporte')
+        ruta_image_persona_reporta = './images/images_form/persona_que_reporta.PNG'
+        st.image(ruta_image_persona_reporta)
+        st.markdown('3. seleccionar el año a reportar')
+        ruta_image_año_reporta = './images/images_form/anio_a_reportar.PNG'
+        st.image(ruta_image_año_reporta)
+        st.markdown('4. Escribe el nombre de la Autoridad Ambiental que realiza el reporte')
+        ruta_image_autoridad_ambiental = './images/images_form/nombre_autoridad_ambiental.PNG'
+        st.image(ruta_image_autoridad_ambiental)
+        instruccion_5 = '5. Si reporta generadores dar clic en la opción Si. '
+        instruccion_5 += 'Se realiza un reporte por proyecto del generador. '
+        instruccion_5 += 'Si hay más de un proyecto se debe llenar un formulario nuevo '
+        instruccion_5 += 'por cada proyecto de un generador.'
+        st.markdown(instruccion_5)
+        ruta_image_reporta_generador = './images/images_form/reporta_generadores.PNG'
+        st.image(ruta_image_reporta_generador)
 if __name__ == '__main__':
     main()
     # st.map(df_gestores[['latitude', 'longitude']], 
