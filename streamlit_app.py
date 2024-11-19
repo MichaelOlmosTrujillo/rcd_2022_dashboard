@@ -295,7 +295,9 @@ def main():
             get_color="[8, 102, 185]",
             pickable = True,
             auto_highlight = True,
-            get_radius = 3000,
+            radius_scale = 10,
+            radius_min_pixels = 5,
+            radius_max_pixels = 30
         )
         # layer_depto = pdk.Layer(
         #     "ScatterplotLayer",
