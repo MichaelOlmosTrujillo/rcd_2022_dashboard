@@ -2,3 +2,4 @@
 
 * Es un reporte que busca mostrar la problemática ambiental de los RCD en el país.
 * Permite observar los gestores de RCD en un mapa observando sus característcas principales.
+* Este es un dashboard que puede contener futuros reportes de RCD.
